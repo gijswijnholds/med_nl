@@ -1,6 +1,6 @@
 # Preprocess data using a tokenizer etc
 from typing import NamedTuple
-from src.datasets import CompactSample, SICK, MED
+from .datasets import CompactSample, SICK, MED
 from transformers import AutoTokenizer
 from torch.utils.data import Dataset
 
