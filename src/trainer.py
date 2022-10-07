@@ -16,7 +16,7 @@ def sequence_collator(word_pad: int) -> Callable[[List[ProcessedSample]], Tuple[
         input_ids = pad_sequence([torch.tensor(sample.tokens) for sample in samples],
                                  padding_value=word_pad, batch_first=True)
         input_mask = input_ids != word_pad
-        labels = [sample.compact.label for sample in samples]
+        labels = torch.tensor([sample.compact.label for sample in samples])
         return input_ids, input_mask, labels
     return collate_fn
 

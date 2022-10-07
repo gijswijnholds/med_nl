@@ -23,7 +23,7 @@ def setup_trainer(data_path: str,
                   seed: int = 42) -> Trainer:
     word_pad_id = 3 if bert_name == bertje_name else 1 if bert_name == robbert_name else None
     torch.manual_seed(seed)
-    model = AutoModelForSequenceClassification.from_pretrained(bert_name)
+    model = AutoModelForSequenceClassification.from_pretrained(bert_name, num_labels=2)
     train_dataset, val_dataset, _ = prepare_datasets(data_path, bert_name)
     return Trainer(name=f'{bert_name.split("/")[-1]}_{seed}',
                    model=model,
@@ -43,7 +43,7 @@ def setup_tester(data_path: str,
                   seed: int = 42) -> Trainer:
     word_pad_id = 3 if bert_name == bertje_name else 1 if bert_name == robbert_name else None
     torch.manual_seed(seed)
-    model = AutoModelForSequenceClassification.from_pretrained(bert_name)
+    model = AutoModelForSequenceClassification.from_pretrained(bert_name, num_labels=2)
     _, _, test_dataset = prepare_datasets(data_path, bert_name)
     return Trainer(name=f'{bert_name.split("/")[-1]}_{seed}',
                    model=model,
