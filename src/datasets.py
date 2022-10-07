@@ -17,7 +17,7 @@ class CompactSample(NamedTuple):
 
 
 def get_entailment(ent: str) -> str:
-    ent_map = {'entailment': 0, 'neutral': 1, 'contradiction': 2}
+    ent_map = {'entailment': 0, 'neutral': 1, 'contradiction': 1}
     return ent_map[ent.lower()]
 
 
