@@ -99,7 +99,7 @@ class Trainer:
         predictions = self.model.forward(
             input_ids.to(self.device), input_masks.to(self.device)).logits
         batch_loss = self.loss_fn(predictions, ys.to(self.device))
-        accuracy = compute_accuracy(predictions, ys)
+        accuracy = compute_accuracy(predictions, ys.to(self.device))
         return batch_loss.item(), accuracy
 
     def eval_epoch(self, eval_set: str):
