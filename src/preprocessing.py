@@ -9,7 +9,7 @@ class ProcessedSample(NamedTuple):
     premise_tokens: List[int]
     hypothesis_tokens: List[int]
     tokens: List[int]
-    sample: CompactSample
+    compact: CompactSample
 
 
 def create_tokenizer(tokenizer_name: str):
