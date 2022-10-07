@@ -35,8 +35,6 @@ def tokenize_compacts(tokenizer, data: List[CompactSample]) -> List[ProcessedSam
 class NLIDataset(Dataset):
     def __init__(self, data: List[ProcessedSample]):
         self.data = data
-        for sample in self.data:
-            sample.check()
 
     def __len__(self) -> int:
         return len(self.data)
