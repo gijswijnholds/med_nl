@@ -1,5 +1,5 @@
 # Define datasets etc.
-from typing import NamedTuple
+from typing import NamedTuple, List
 
 # TODO: turn into an enum (or other) class
 UP = 'UP'
@@ -63,7 +63,7 @@ def get_monotonicity(props: str) -> str:
         raise ValueError("No monotonicity found!")
 
 
-def get_features(props: str) -> list:
+def get_features(props: str) -> List:
     non_features = ['upward_monotone', 'downward_monotone', 'non_monotone']
     return list(filter(lambda p: p not in non_features, props.split(':')))
 

@@ -5,14 +5,14 @@ import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 from torch import LongTensor, Tensor, no_grad
-from typing import Callable, Any
+from typing import Callable, Any, List, Tuple, Dict
 from typing import Optional as Maybe
 from .preprocessing import ProcessedSample, NLIDataset
 from transfomers import AutoModelForSequenceClassification
 
 
-def sequence_collator(word_pad: int) -> Callable[[list[ProcessedSample]], tuple[Tensor, Tensor, Tensor]]:
-    def collate_fn(samples: list[ProcessedSample]) -> tuple[Tensor, Tensor, Tensor]:
+def sequence_collator(word_pad: int) -> Callable[[List[ProcessedSample]], Tuple[Tensor, Tensor, Tensor]]:
+    def collate_fn(samples: List[ProcessedSample]) -> Tuple[Tensor, Tensor, Tensor]:
         input_ids = pad_sequence([torch.tensor(sample.tokens) for sample in samples],
                                  padding_value=word_pad, batch_first=True)
         input_mask = input_ids != word_pad
@@ -57,7 +57,7 @@ class Trainer:
         self.optimizer = optim_constructor(self.model.parameters(), lr=lr) if optim_constructor else None
         self.loss_fn = loss_fn if loss_fn else None
 
-    def save_results(self, results: dict[int, dict[str, float]]):
+    def save_results(self, results: Dict[int, Dict[str, float]]):
         file_path = f"{self.results_folder}/results_{self.name}.p"
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -66,7 +66,7 @@ class Trainer:
 
     def train_batch(
             self,
-            batch: tuple[LongTensor, LongTensor, LongTensor]) -> tuple[float, float]:
+            batch: Tuple[LongTensor, LongTensor, LongTensor]) -> Tuple[float, float]:
         self.model.train()
         input_ids, input_masks, ys = batch
         predictions, _ = self.model.forward(input_ids.to(self.device), input_masks.to(self.device))
@@ -90,7 +90,7 @@ class Trainer:
     @no_grad()
     def eval_batch(
             self,
-            batch: tuple[LongTensor, LongTensor, LongTensor]) -> tuple[float, float]:
+            batch: tuple[LongTensor, LongTensor, LongTensor]) -> Tuple[float, float]:
         self.model.eval()
         input_ids, input_masks, ys = batch
         predictions, _ = self.model.forward(
@@ -115,14 +115,14 @@ class Trainer:
     @no_grad()
     def predict_batch(
             self,
-            batch: tuple[LongTensor, LongTensor, Any]) -> list[int]:
+            batch: Tuple[LongTensor, LongTensor, Any]) -> List[int]:
         self.model.eval()
         input_ids, input_masks, verb_spans, noun_spans, _ = batch
         predictions = self.model.forward(input_ids.to(self.device), input_masks.to(self.device))
         return predictions
 
     @no_grad()
-    def predict_epoch(self) -> list[int]:
+    def predict_epoch(self) -> List[int]:
         return [label for batch in self.test_loader for label in self.predict_batch(batch)]
 
     def train_loop(self, num_epochs: int, val_every: int = 1, save_at_best: bool = False):

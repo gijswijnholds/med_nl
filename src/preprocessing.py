@@ -1,14 +1,14 @@
 # Preprocess data using a tokenizer etc
-from typing import NamedTuple
+from typing import NamedTuple, List
 from .datasets import CompactSample, SICK, MED
 from transformers import AutoTokenizer
 from torch.utils.data import Dataset
 
 
 class ProcessedSample(NamedTuple):
-    premise_tokens: list[int]
-    hypothesis_tokens: list[int]
-    tokens: list[int]
+    premise_tokens: List[int]
+    hypothesis_tokens: List[int]
+    tokens: List[int]
     sample: CompactSample
 
 
@@ -28,12 +28,12 @@ def tokenize_compact(tokenizer, compact: CompactSample) -> ProcessedSample:
     return ProcessedSample(prem_tokens, hyp_tokens, all_tokens, compact)
 
 
-def tokenize_compacts(tokenizer, data: list[CompactSample]) -> list[ProcessedSample]:
+def tokenize_compacts(tokenizer, data: List[CompactSample]) -> List[ProcessedSample]:
     return [tokenize_compact(tokenizer, sample) for sample in data]
 
 
 class NLIDataset(Dataset):
-    def __init__(self, data: list[ProcessedSample]):
+    def __init__(self, data: List[ProcessedSample]):
         self.data = data
         for sample in self.data:
             sample.check()
@@ -45,7 +45,7 @@ class NLIDataset(Dataset):
         return self.data[i]
 
 
-def prepare_sick_datasets(sick_path: str, model_name: str) -> list[NLIDataset]:
+def prepare_sick_datasets(sick_path: str, model_name: str) -> List[NLIDataset]:
     sick = SICK(sick_path)
     print("Getting tokenizer...")
     tokenizer = create_tokenizer(model_name)
@@ -54,7 +54,7 @@ def prepare_sick_datasets(sick_path: str, model_name: str) -> list[NLIDataset]:
             for samples in [sick.train_data, sick.dev_data, sick.test_data]]
 
 
-def prepare_med_datasets(med_path: str, model_name: str) -> list[NLIDataset]:
+def prepare_med_datasets(med_path: str, model_name: str) -> List[NLIDataset]:
     med = MED(med_path)
     print("Getting tokenizer...")
     tokenizer = create_tokenizer(model_name)
@@ -63,7 +63,7 @@ def prepare_med_datasets(med_path: str, model_name: str) -> list[NLIDataset]:
             for samples in [med.train_data, med.dev_data, med.test_data]]
 
 
-def prepare_datasets(path: str, model_name: str) -> list[NLIDataset]:
+def prepare_datasets(path: str, model_name: str) -> List[NLIDataset]:
     if 'MED' in path:
         return prepare_med_datasets(path, model_name)
     elif 'SICK' in path:
