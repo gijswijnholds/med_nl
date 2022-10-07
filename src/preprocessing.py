@@ -23,7 +23,7 @@ def tokenize_compact(tokenizer, compact: CompactSample) -> ProcessedSample:
     prem_tokens = list(map(lambda w: tokenizer.tokenize(w), compact.premise.split()))
     prem_tokens = tokenizer.convert_tokens_to_ids(sum(prem_tokens, []))
     hyp_tokens = list(map(lambda w: tokenizer.tokenize(w), compact.hypothesis.split()))
-    hyp_tokens = tokenizer.convert_tokens_to_ids(sum(prem_tokens, []))
+    hyp_tokens = tokenizer.convert_tokens_to_ids(sum(hyp_tokens, []))
     all_tokens = [cls_token_id] + prem_tokens + [sep_token_id] + hyp_tokens + [sep_token_id]
     return ProcessedSample(prem_tokens, hyp_tokens, all_tokens, compact)
 
