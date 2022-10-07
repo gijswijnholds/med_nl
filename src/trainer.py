@@ -41,7 +41,8 @@ class Trainer:
                  lr: Maybe[float] = None,
                  loss_fn: Maybe[torch.nn.Module] = None,
                  device: str = 'cuda',
-                 results_folder: str = 'results'):
+                 results_folder: str = 'results',
+                 model_folder: str = '.'):
         self.name = name
         self.batch_size_train = batch_size_train
         self.batch_size_val = batch_size_val
@@ -56,6 +57,8 @@ class Trainer:
         self.model = model.to(device)
         self.optimizer = optim_constructor(self.model.parameters(), lr=lr) if optim_constructor else None
         self.loss_fn = loss_fn if loss_fn else None
+        self.results_folder = results_folder
+        self.model_folder = model_folder
 
     def save_results(self, results: Dict[int, Dict[str, float]]):
         file_path = f"{self.results_folder}/results_{self.name}.p"
@@ -135,10 +138,10 @@ class Trainer:
                 val_loss, val_acc = self.eval_epoch(eval_set='val')
                 print(f"Val loss {val_loss:.5f}, Val accuracy: {val_acc:.5f}")
                 if save_at_best and val_acc > max([v['val_acc'] for v in results.values()]):
-                    for file in os.listdir('./'):
+                    for file in os.listdir(self.model_folder):
                         if file.startswith(f'{self.name}'):
                             os.remove(file)
-                    self.model.save(f'{self.name}_{e}')
+                    self.model.save(f'{self.model_folder}/{self.name}_{e}')
             else:
                 val_loss, val_acc = None, -1
             results[e] = {'train_loss': train_loss, 'train_acc': train_acc,

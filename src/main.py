@@ -35,7 +35,9 @@ def setup_trainer(data_path: str,
                    lr=1e-04,
                    loss_fn=CrossEntropyLoss(),
                    device=device,
-                   word_pad=word_pad_id)
+                   word_pad=word_pad_id,
+                   results_folder="./drive/MyDrive/results",
+                   model_folder="./drive/MyDrive/models")
 
 def setup_tester(data_path: str,
                   bert_name: str,
