@@ -8,7 +8,7 @@ from torch import LongTensor, Tensor, no_grad
 from typing import Callable, Any, List, Tuple, Dict
 from typing import Optional as Maybe
 from .preprocessing import ProcessedSample, NLIDataset
-from transfomers import AutoModelForSequenceClassification
+from transformers import AutoModelForSequenceClassification
 
 
 def sequence_collator(word_pad: int) -> Callable[[List[ProcessedSample]], Tuple[Tensor, Tensor, Tensor]]:
