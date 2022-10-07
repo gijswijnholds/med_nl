@@ -72,7 +72,7 @@ class Trainer:
             batch: Tuple[LongTensor, LongTensor, LongTensor]) -> Tuple[float, float]:
         self.model.train()
         input_ids, input_masks, ys = batch
-        predictions = self.model.forward(input_ids.to(self.device), input_masks.to(self.device))
+        predictions = self.model.forward(input_ids.to(self.device), input_masks.to(self.device)).logits
         batch_loss = self.loss_fn(predictions, ys.to(self.device))
         accuracy = compute_accuracy(predictions, ys)
         batch_loss.backward()
@@ -97,7 +97,7 @@ class Trainer:
         self.model.eval()
         input_ids, input_masks, ys = batch
         predictions = self.model.forward(
-            input_ids.to(self.device), input_masks.to(self.device))
+            input_ids.to(self.device), input_masks.to(self.device)).logits
         batch_loss = self.loss_fn(predictions, ys.to(self.device))
         accuracy = compute_accuracy(predictions, ys)
         return batch_loss.item(), accuracy
@@ -121,7 +121,7 @@ class Trainer:
             batch: Tuple[LongTensor, LongTensor, Any]) -> List[int]:
         self.model.eval()
         input_ids, input_masks, verb_spans, noun_spans, _ = batch
-        predictions = self.model.forward(input_ids.to(self.device), input_masks.to(self.device))
+        predictions = self.model.forward(input_ids.to(self.device), input_masks.to(self.device)).logits
         return predictions
 
     @no_grad()
