@@ -140,7 +140,7 @@ class Trainer:
                 if save_at_best and val_acc > max([v['val_acc'] for v in results.values()]):
                     for file in os.listdir(self.model_folder):
                         if file.startswith(f'{self.name}'):
-                            os.remove(file)
+                            os.remove(os.path.join(self.model_folder, file))
                     self.model.save_pretrained(f'{self.model_folder}/{self.name}_{e}')
             else:
                 val_loss, val_acc = None, -1
