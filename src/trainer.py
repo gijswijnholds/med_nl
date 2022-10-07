@@ -1,4 +1,5 @@
 import os
+import shutil
 import pickle
 from tqdm import tqdm
 import torch
@@ -138,9 +139,9 @@ class Trainer:
                 val_loss, val_acc = self.eval_epoch(eval_set='val')
                 print(f"Val loss {val_loss:.5f}, Val accuracy: {val_acc:.5f}")
                 if save_at_best and val_acc > max([v['val_acc'] for v in results.values()]):
-                    for file in os.listdir(self.model_folder):
-                        if file.startswith(f'{self.name}'):
-                            os.remove(os.path.join(self.model_folder, file))
+                    for folder in os.listdir(self.model_folder):
+                        if folder.startswith(f'{self.name}'):
+                            shutil.rmtree(os.path.join(self.model_folder, folder))
                     self.model.save_pretrained(f'{self.model_folder}/{self.name}_{e}')
             else:
                 val_loss, val_acc = None, -1
