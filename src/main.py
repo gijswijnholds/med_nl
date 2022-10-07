@@ -1,7 +1,5 @@
 import os
-
 import torch
-
 from transformers import AutoModelForSequenceClassification
 from .preprocessing import prepare_datasets
 from .trainer import Trainer, Maybe, NLIDataset

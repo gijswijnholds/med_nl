@@ -70,7 +70,7 @@ class Trainer:
         self.model.train()
         input_ids, input_masks, ys = batch
         predictions, _ = self.model.forward(input_ids.to(self.device), input_masks.to(self.device))
-        batch_loss = self.loss_fn(predictions, ys := ys.to(self.device))
+        batch_loss = self.loss_fn(predictions, ys.to(self.device))
         accuracy = compute_accuracy(predictions, ys)
         batch_loss.backward()
         self.optimizer.step()
@@ -95,7 +95,7 @@ class Trainer:
         input_ids, input_masks, ys = batch
         predictions, _ = self.model.forward(
             input_ids.to(self.device), input_masks.to(self.device))
-        batch_loss = self.loss_fn(predictions, ys := ys.to(self.device))
+        batch_loss = self.loss_fn(predictions, ys.to(self.device))
         accuracy = compute_accuracy(predictions, ys)
         return batch_loss.item(), accuracy
 
