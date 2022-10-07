@@ -90,7 +90,7 @@ class Trainer:
     @no_grad()
     def eval_batch(
             self,
-            batch: tuple[LongTensor, LongTensor, LongTensor]) -> Tuple[float, float]:
+            batch: Tuple[LongTensor, LongTensor, LongTensor]) -> Tuple[float, float]:
         self.model.eval()
         input_ids, input_masks, ys = batch
         predictions, _ = self.model.forward(
