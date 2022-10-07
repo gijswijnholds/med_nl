@@ -141,7 +141,7 @@ class Trainer:
                     for file in os.listdir(self.model_folder):
                         if file.startswith(f'{self.name}'):
                             os.remove(file)
-                    self.model.save(f'{self.model_folder}/{self.name}_{e}')
+                    self.model.save_pretrained(f'{self.model_folder}/{self.name}_{e}')
             else:
                 val_loss, val_acc = None, -1
             results[e] = {'train_loss': train_loss, 'train_acc': train_acc,
