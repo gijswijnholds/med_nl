@@ -41,14 +41,14 @@ class SICK(object):
         for (id, s1, s2, e_label, rl, s) in self.raw_data:
             el = get_entailment(e_label)
             if s == 'TRAIN':
-                train_data.append(CompactSample(id, s1, s2, el, NON, []))
-                all_data.append(CompactSample(id, s1, s2, el, NON, []))
+                train_data.append(CompactSample(id, s1, s2, el, NON, ['other']))
+                all_data.append(CompactSample(id, s1, s2, el, NON, ['other']))
             if s == 'TRIAL':
-                dev_data.append(CompactSample(id, s1, s2, el, NON, []))
-                all_data.append(CompactSample(id, s1, s2, el, NON, []))
+                dev_data.append(CompactSample(id, s1, s2, el, NON, ['other']))
+                all_data.append(CompactSample(id, s1, s2, el, NON, ['other']))
             if s == 'TEST':
-                test_data.append(CompactSample(id, s1, s2, el, NON, []))
-                all_data.append(CompactSample(id, s1, s2, el, NON, []))
+                test_data.append(CompactSample(id, s1, s2, el, NON, ['other']))
+                all_data.append(CompactSample(id, s1, s2, el, NON, ['other']))
         return train_data, dev_data, test_data, all_data
 
 
@@ -64,8 +64,12 @@ def get_monotonicity(props: str) -> str:
 
 
 def get_features(props: str) -> List:
-    non_features = ['upward_monotone', 'downward_monotone', 'non_monotone']
-    return list(filter(lambda p: p not in non_features, props.split(':')))
+    non_features = ['upward_monotone', 'downward_monotone', 'non_monotone', 'GLUE', 'FraCaS_GQ', 'crowd', 'paper']
+    features = list(filter(lambda p: p not in non_features, props.split(':')))
+    if features:
+        return list(map(lambda s: s.lower(), features))
+    else:
+        return ['other']
 
 
 class MED(object):
