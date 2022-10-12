@@ -7,7 +7,7 @@ from .trainer import Trainer, Maybe, NLIDataset
 from .config import bertje_name, robbert_name, sick_nl_path, med_nl_path
 from torch.nn import CrossEntropyLoss
 from torch.optim import AdamW
-from .analysis import analysis
+from .analysis import agg_analysis
 
 GLOBAL_SEEDS = [3, 7, 42]
 
@@ -81,3 +81,13 @@ def get_agg_test_results(data_path, model_folder, seeds: List[int]) -> Tuple[NLI
         predictionss.append(trainer.predict_epoch())
     predictionss = [[torch.argmax(p).item() for p in preds] for preds in predictionss]
     return list(zip(test_datas[0], list(zip(*predictionss))))
+
+
+def main_eval_loop():
+    sick_test_results = get_agg_test_results(data_path="./drive/MyDrive/data/SICK_NL.txt",
+                                             model_folder="./drive/MyDrive/models_sicknl", seeds=[3,7,42])
+    sick_analysis = agg_analysis(sick_test_results)
+    med_test_results = get_agg_test_results(data_path="./drive/MyDrive/data/MED_NL.tsv",
+                                            model_folder="./drive/MyDrive/models_sicknl", seeds=[3, 7, 42])
+    med_analysis = agg_analysis(med_test_results)
+    return sick_analysis, med_analysis
