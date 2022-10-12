@@ -20,7 +20,9 @@ GLOBAL_SEEDS = [3, 7, 42]
 def setup_trainer(data_path: str,
                   bert_name: str,
                   device: str,
-                  seed: int = 42) -> Trainer:
+                  seed: int = 42,
+                  results_folder: str="./results",
+                  model_folder: str="./models") -> Trainer:
     word_pad_id = 3 if bert_name == bertje_name else 1 if bert_name == robbert_name else None
     torch.manual_seed(seed)
     model = AutoModelForSequenceClassification.from_pretrained(bert_name, num_labels=2)
@@ -36,8 +38,8 @@ def setup_trainer(data_path: str,
                    loss_fn=CrossEntropyLoss(),
                    device=device,
                    word_pad=word_pad_id,
-                   results_folder="./drive/MyDrive/results",
-                   model_folder="./drive/MyDrive/models")
+                   results_folder=results_folder,
+                   model_folder=model_folder)
 
 def setup_tester(data_path: str,
                  model_folder: str,
@@ -58,10 +60,12 @@ def setup_tester(data_path: str,
                    word_pad=word_pad_id)
 
 def train_on_sick():
-    trainer = setup_trainer(data_path=sick_nl_path, bert_name=bertje_name, device='cpu', seed=42)
+    trainer = setup_trainer(data_path=sick_nl_path, bert_name=bertje_name, device='cuda', seed=42,
+                            results_folder="./drive/MyDrive/results", model_folder="./drive/MyDrive/models")
     trainer.train_loop(num_epochs=20, val_every=1, save_at_best=True)
 
 
 def test_on_sick():
-    trainer = setup_tester(data_path=sick_nl_path, model_folder="./drive/MyDrive/models", bert_name=bertje_name, device='cpu', seed=42)
+    trainer = setup_tester(data_path=sick_nl_path, model_folder="./drive/MyDrive/models",
+                           bert_name=bertje_name, device='cuda', seed=42)
     return analysis(trainer.test_loader.dataset, trainer.predict_epoch()), trainer.test_loader.dataset
