@@ -58,7 +58,7 @@ def prepare_med_datasets(med_path: str, model_name: str) -> List[NLIDataset]:
     tokenizer = create_tokenizer(model_name)
     print("Tokenizing data...")
     return [NLIDataset(tokenize_compacts(tokenizer, samples))
-            for samples in [med.train_data, med.dev_data, med.test_data]]
+            for samples in [med.data, med.data, med.data]]
 
 
 def prepare_datasets(path: str, model_name: str) -> List[NLIDataset]:

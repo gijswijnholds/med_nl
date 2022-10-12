@@ -1,5 +1,6 @@
 import os
 import torch
+from typing import List, Tuple
 from transformers import AutoModelForSequenceClassification
 from .preprocessing import prepare_datasets
 from .trainer import Trainer, Maybe, NLIDataset
@@ -69,3 +70,14 @@ def test_on_sick():
     trainer = setup_tester(data_path=sick_nl_path, model_folder="./drive/MyDrive/models",
                            bert_name=bertje_name, device='cuda', seed=42)
     return analysis(trainer.test_loader.dataset, trainer.predict_epoch()), trainer.test_loader.dataset
+
+def get_agg_test_results(data_path, model_folder, seeds: List[int]) -> Tuple[NLIDataset,List[Tuple[int,int,int]]]:
+    test_datas = []
+    predictionss = []
+    for s in seeds:
+        trainer = setup_tester(data_path=data_path, model_folder=model_folder,
+                               bert_name=bertje_name, device='cuda', seed=s)
+        test_datas.append(trainer.test_loader.dataset)
+        predictionss.append(trainer.predict_epoch())
+    predictionss = [[torch.argmax(p).item() for p in preds] for preds in predictionss]
+    return list(zip(test_datas[0], list(zip(*predictionss))))
