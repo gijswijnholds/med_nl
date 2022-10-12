@@ -77,5 +77,5 @@ class MED(object):
     def load_data(self):
         with open(self.med_fn, 'r') as in_file:
             lines = [ln.strip().split('\t') for ln in in_file.readlines()][1:]
-        return [CompactSample(int(ln[0]), get_monotonicity(ln[3]), ln[8], ln[9],
-                              get_entailment(ln[15]), get_features(ln[3])) for ln in lines]
+        return [CompactSample(int(ln[0]), ln[8], ln[9], get_entailment(ln[15]),
+                              get_monotonicity(ln[3]), get_features(ln[3])) for ln in lines]
