@@ -121,7 +121,7 @@ class Trainer:
             self,
             batch: Tuple[LongTensor, LongTensor, Any]) -> List[int]:
         self.model.eval()
-        input_ids, input_masks, verb_spans, noun_spans, _ = batch
+        input_ids, input_masks, _ = batch
         predictions = self.model.forward(input_ids.to(self.device), input_masks.to(self.device)).logits
         return predictions
 

@@ -40,14 +40,17 @@ def setup_trainer(data_path: str,
                    model_folder="./drive/MyDrive/models")
 
 def setup_tester(data_path: str,
-                  bert_name: str,
-                  device: str,
-                  seed: int = 42) -> Trainer:
+                 model_folder: str,
+                 bert_name: str,
+                 device: str,
+                 seed: int = 42) -> Trainer:
     word_pad_id = 3 if bert_name == bertje_name else 1 if bert_name == robbert_name else None
     torch.manual_seed(seed)
-    model = AutoModelForSequenceClassification.from_pretrained(bert_name, num_labels=2)
+    model_name = f'{bert_name.split("/")[-1]}_{seed}'
+    model_path = os.path.join(model_folder, [fn for fn in os.listdir(model_folder) if fn.startswith(model_name)][0])
+    model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=2)
     _, _, test_dataset = prepare_datasets(data_path, bert_name)
-    return Trainer(name=f'{bert_name.split("/")[-1]}_{seed}',
+    return Trainer(name=model_name,
                    model=model,
                    test_dataset=test_dataset,
                    batch_size_test=128,
@@ -60,5 +63,5 @@ def train_on_sick():
 
 
 def test_on_sick():
-    trainer = setup_tester(data_path=sick_nl_path, bert_name=bertje_name, device='cpu', seed=42)
+    trainer = setup_tester(data_path=sick_nl_path, model_folder="./drive/MyDrive/models", bert_name=bertje_name, device='cpu', seed=42)
     return analysis(trainer.test_loader.dataset, trainer.predict_epoch()), trainer.test_loader.dataset
