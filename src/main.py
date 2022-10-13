@@ -120,7 +120,7 @@ def main_eval_loop(bert_name):
     sick_test_results = get_agg_test_results(data_path="./drive/MyDrive/data/SICK_NL.txt",
                                              model_folder="./drive/MyDrive/models_sicknl",
                                              bert_name=bert_name,
-                                             seeds=[3,7,42])
+                                             seeds=[3, 7, 42])
     sick_analysis = agg_analysis(sick_test_results)
     med_test_results = get_agg_test_results(data_path="./drive/MyDrive/data/MED_NL.tsv",
                                             model_folder="./drive/MyDrive/models_sicknl",
@@ -232,3 +232,7 @@ def main_eval_loop(bert_name):
 #   'npi': (0.3865877712031557, 338),
 #   'intersectivity': (0.43749999999999994, 32),
 #   'other': (0.4650825524319493, 2988)}}
+
+# Seed-averaged Validation accuracy
+# BERTje: 0.8689118872086207
+# RobBERT: 0.8642548869053522)
