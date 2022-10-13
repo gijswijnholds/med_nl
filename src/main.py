@@ -71,24 +71,27 @@ def test_on_sick():
                            bert_name=bertje_name, device='cuda', seed=42)
     return analysis(trainer.test_loader.dataset, trainer.predict_epoch()), trainer.test_loader.dataset
 
-def get_agg_test_results(data_path, model_folder, seeds: List[int]) -> Tuple[NLIDataset,List[Tuple[int,int,int]]]:
+def get_agg_test_results(data_path, model_folder, bert_name, seeds: List[int]) -> Tuple[NLIDataset,List[Tuple[int,int,int]]]:
     test_datas = []
     predictionss = []
     for s in seeds:
         trainer = setup_tester(data_path=data_path, model_folder=model_folder,
-                               bert_name=bertje_name, device='cuda', seed=s)
+                               bert_name=bert_name, device='cuda', seed=s)
         test_datas.append(trainer.test_loader.dataset)
         predictionss.append(trainer.predict_epoch())
     predictionss = [[torch.argmax(p).item() for p in preds] for preds in predictionss]
     return list(zip(test_datas[0], list(zip(*predictionss))))
 
 
-def main_eval_loop():
+def main_eval_loop(bert_name):
     sick_test_results = get_agg_test_results(data_path="./drive/MyDrive/data/SICK_NL.txt",
-                                             model_folder="./drive/MyDrive/models_sicknl", seeds=[3,7,42])
+                                             model_folder="./drive/MyDrive/models_sicknl",
+                                             bert_name=bert_name,
+                                             seeds=[3,7,42])
     sick_analysis = agg_analysis(sick_test_results)
     med_test_results = get_agg_test_results(data_path="./drive/MyDrive/data/MED_NL.tsv",
-                                            model_folder="./drive/MyDrive/models_sicknl", seeds=[3, 7, 42])
+                                            model_folder="./drive/MyDrive/models_sicknl",
+                                            bert_name=bert_name, seeds=[3, 7, 42])
     med_analysis = agg_analysis(med_test_results)
     return sick_analysis, med_analysis
 
