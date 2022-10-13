@@ -60,6 +60,7 @@ def setup_validator(data_path: str,
                    test_dataset=test_dataset,
                    batch_size_val=128,
                    batch_size_test=128,
+                   loss_fn=CrossEntropyLoss(),
                    device=device,
                    word_pad=word_pad_id)
 
