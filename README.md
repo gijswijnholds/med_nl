@@ -4,7 +4,7 @@ The code to go alongside our EACL 2023 paper
 
 "Assessing Monotonicity Reasoning in Dutch through Natural Language Inference"
 
-If you found any of the code/data/paper useful, please cite our article:
+If you found any of the code/data/paper useful, please cite [the article](https://aclanthology.org/2023.findings-eacl.110/):
 
 ```
 @inproceedings{wijnholds-2023-assessing,
